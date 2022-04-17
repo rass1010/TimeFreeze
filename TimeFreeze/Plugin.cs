@@ -61,13 +61,7 @@ namespace TimeFreeze
                 }
                 else
                 {
-                    if (!canFreeze)
-                    {
-                        GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.useGravity = true;
-                        GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.velocity = lastVel;
-                        GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.angularVelocity = lastAngVel;
-                        canFreeze = true;
-                    }
+                    ResetFreeze();
                 }
 
             }
@@ -88,6 +82,7 @@ namespace TimeFreeze
         {
             // The room was left. Disable mod stuff.
             inAllowedRoom = false;
+            ResetFreeze();
         }
 
         void OnEnable()
@@ -99,6 +94,12 @@ namespace TimeFreeze
         void OnDisable()
         {
             hauntedModMenuEnabled = false;
+            ResetFreeze();
+        }
+
+
+        void ResetFreeze()
+        {
             if (!canFreeze)
             {
                 GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.useGravity = true;
@@ -107,6 +108,7 @@ namespace TimeFreeze
                 canFreeze = true;
             }
         }
+
 
     }
 

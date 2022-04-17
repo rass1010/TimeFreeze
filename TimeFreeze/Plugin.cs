@@ -1,4 +1,4 @@
-﻿using BepInEx;
+using BepInEx;
 using System;
 using System.ComponentModel;
 using System.Collections.Generic;
@@ -93,11 +93,19 @@ namespace TimeFreeze
         void OnEnable()
         {
             hauntedModMenuEnabled = true;
+            
         }
 
         void OnDisable()
         {
             hauntedModMenuEnabled = false;
+            if (!canFreeze)
+            {
+                GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.useGravity = true;
+                GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.velocity = lastVel;
+                GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.angularVelocity = lastAngVel;
+                canFreeze = true;
+            }
         }
 
     }

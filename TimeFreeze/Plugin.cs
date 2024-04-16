@@ -12,6 +12,7 @@ namespace TimeStop
         //bools
         public bool inAllowedRoom = false;
         public bool canFreeze;
+        public bool freeze;
 
         //float
         public bool activate;
@@ -30,6 +31,11 @@ namespace TimeStop
             {
                 activate = ControllerInputPoller.instance.rightControllerPrimaryButton;
 
+                if (freeze)
+                {
+                    GorillaLocomotion.Player.Instance.transform.GetComponent<Rigidbody>().velocity = (GorillaTagger.Instance.offlineVRRig.transform.up * 0.073f) * GorillaLocomotion.Player.Instance.scale;
+                }
+
                 if (activate)
                 {
                     if (canFreeze)
@@ -41,7 +47,7 @@ namespace TimeStop
 
                     GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.velocity = Vector3.zero;
                     GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.angularVelocity = Vector3.zero;
-                    GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.useGravity = false;
+                    freeze = false;
                 }
                 else
                 {
@@ -74,7 +80,7 @@ namespace TimeStop
         {
             if (!canFreeze)
             {
-                GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.useGravity = true;
+                freeze = false;
                 GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.velocity = lastVel;
                 GorillaLocomotion.Player.Instance.bodyCollider.attachedRigidbody.angularVelocity = lastAngVel;
                 canFreeze = true;

@@ -1,26 +1,20 @@
-﻿using BepInEx;
-using System;
-using System.ComponentModel;
-using System.Collections.Generic;
+using BepInEx;
 using UnityEngine;
 using Utilla;
-using UnityEngine.XR;
 
-namespace TimeFreeze
+namespace TimeStop
 {
-    [Description("HauntedModMenu")]
-    [BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
+    [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
     [BepInDependency("org.legoandmars.gorillatag.utilla", "1.5.0")]
     [ModdedGamemode]
     public class Plugin : BaseUnityPlugin
     {
         //bools
         public bool inAllowedRoom = false;
-        public bool hauntedModMenuEnabled = true;
         public bool canFreeze;
 
         //float
-        public float triggerpressed;
+        public bool activate;
 
         //vectors
         public Vector3 lastVel;
@@ -28,25 +22,15 @@ namespace TimeFreeze
 
         void Awake()
         {
-            HarmonyPatches.ApplyHarmonyPatches();
         }
 
         void Update()
         {
-            if(inAllowedRoom && hauntedModMenuEnabled)
+            if (inAllowedRoom)
             {
-                List<InputDevice> list = new List<InputDevice>();
-                InputDevices.GetDevices(list);
+                activate = ControllerInputPoller.instance.rightControllerPrimaryButton;
 
-                for (int i = 0; i < list.Count; i++) //Get input
-                {
-                    if (list[i].characteristics.HasFlag(InputDeviceCharacteristics.Right))
-                    {
-                        list[i].TryGetFeatureValue(CommonUsages.trigger, out triggerpressed);
-                    }
-                }
-
-                if(triggerpressed > 0.1f)
+                if (activate)
                 {
                     if (canFreeze)
                     {
@@ -85,18 +69,6 @@ namespace TimeFreeze
             ResetFreeze();
         }
 
-        void OnEnable()
-        {
-            hauntedModMenuEnabled = true;
-            
-        }
-
-        void OnDisable()
-        {
-            hauntedModMenuEnabled = false;
-            ResetFreeze();
-        }
-
 
         void ResetFreeze()
         {
@@ -108,9 +80,5 @@ namespace TimeFreeze
                 canFreeze = true;
             }
         }
-
-
     }
-
-    
 }
